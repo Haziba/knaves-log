@@ -4,11 +4,7 @@ using Amazon.Lambda.Core;
 using Amazon.Lambda.APIGatewayEvents;
 using Kralizek.Lambda;
 using Microsoft.Extensions.Logging;
-using Badger.Data;
-using Amazon.DynamoDBv2;
 using Newtonsoft.Json;
-using Amazon.DynamoDBv2.Model;
-using System.Collections.Generic;
 
 namespace ApiFunction
 {
@@ -27,33 +23,16 @@ namespace ApiFunction
 
         public async Task<APIGatewayProxyResponse> HandleAsync(APIGatewayProxyRequest input, ILambdaContext context)
         {
-            var client = new AmazonDynamoDBClient();
+            var @event = JsonConvert.DeserializeObject<Event>(input.Body);
 
-            await EventSaver.SaveEvent(new Event
-            {
-                Type = "test",
-                Note = "Cool note",
-                Stats = new Dictionary<string, int>
-                {
-                    ["Cool"] = 5,
-                    ["Stuff"] = 15
-                },
-                Tags = new[] { "TV time", "Not game time" },
-                When = DateTime.UtcNow
-            });
+            @event.When = DateTime.UtcNow;
+
+            await EventSaver.SaveEvent(@event);
 
             return new APIGatewayProxyResponse
             {
                 StatusCode = 200
             };
-        }
-
-        public class GetOne : IQuery<int>
-        {
-            public IPreparedQuery<int> Prepare(IQueryBuilder queryBuilder)
-            {
-                return queryBuilder.WithSql("select 5").WithScalar<int>().Build();
-            }
         }
     }
 }

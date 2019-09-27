@@ -1,3 +1,5 @@
 [Bb]in/
 [Oo]bj/
 [Pp]ublish/
+.vs
+template-output.yaml
