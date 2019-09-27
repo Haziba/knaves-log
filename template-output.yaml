@@ -1,0 +1,58 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'Knave''s Log
+
+  '
+Parameters:
+  PolicyStackNameParameter:
+    Type: String
+    Default: knaves-log-iam
+Resources:
+  ApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://take-my-dog-please/e49d19d5adb0926fda7916662e09618d
+      Handler: ApiFunction::ApiFunction.Function::FunctionHandlerAsync
+      Runtime: dotnetcore2.1
+      Timeout: 20
+      Role:
+        Fn::ImportValue:
+          Fn::Sub: ${PolicyStackNameParameter}-ApiFunctionRoleArn
+      Events:
+        GraphQL:
+          Type: Api
+          Properties:
+            Path: /graphql
+            Method: any
+            RestApiId:
+              Ref: KnavesLogApi
+  KnavesLogApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      DefinitionBody:
+        openapi: '3.0'
+        info:
+          title:
+            Ref: AWS::StackName
+        paths:
+          /graphql:
+            x-amazon-apigateway-any-method:
+              x-amazon-apigateway-integration:
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiFunction.Arn}/invocations
+                httpMethod: POST
+                type: aws_proxy
+  LogEventsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: kl-logs
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH

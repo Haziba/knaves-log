@@ -1,0 +1,83 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Take My Dog Please Roles And Policies'
+
+Resources:
+  ApiFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+      - PolicyName: ApiFunctionRolePolicy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Action:
+            - dynamodb:*
+            Resource: arn:aws:dynamodb:*:*:table/*
+            Effect: Allow
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+
+  KnavesLogApi:
+    Type: AWS::IAM::Role
+    Properties:
+      Policies:
+      - PolicyName: KnavesLogApi
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - cloudformation:*
+            Resource:
+            - "*"
+          - Effect: Allow
+            Action:
+            - lambda:*
+            Resource: "*"
+          - Effect: Allow
+            Action:
+            - s3:GetObject
+            Resource:
+            - arn:aws:s3:::take-my-dog-please/*
+          - Effect: Allow
+            Action:
+            - apigateway:*
+            Resource:
+            - "*"
+          - Effect: Allow
+            Action:
+            - dynamodb:*
+            Resource: arn:aws:dynamodb:*:*:table/*
+          - Effect: Allow
+            Action: iam:PassRole
+            Resource:
+              Fn::Sub: arn:aws:iam::*:role/${AWS::StackName}*
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service:
+            - cloudformation.amazonaws.com
+
+Outputs:
+  ApiFunctionRoleArn:
+    Value:
+      Fn::GetAtt:
+      - ApiFunctionRole
+      - Arn
+    Description: The ApiFunctionRole Arn
+    Export:
+      Name:
+        Fn::Sub: "${AWS::StackName}-ApiFunctionRoleArn"
