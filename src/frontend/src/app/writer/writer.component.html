@@ -1,0 +1,42 @@
+<h1>Writer</h1>
+<form (ngSubmit)="onSubmit()">
+<div>
+    <label>Type:</label>
+    <input placeholder="Type" [(ngModel)]="write.type" name="write.type" />
+</div>
+<div>
+    <label>When:</label>
+    <input type="datetime-local" [ngModel]="write.when | date:'yyyy-MM-ddThh:MM:ss'" name="write.when" />
+</div>
+<div>
+    <label>Note</label>
+    <input value="{{write.note}}" placeholder="Note" [(ngModel)]="write.note" name="write.note" />
+</div>
+<div>
+    <label>Stats</label>
+    <div *ngFor="let stat of write.stats | keyvalue">
+        <input value="{{stat.key}}" />
+        <input number="number" value="{{stat.value}}" />
+        <button type="button" (click)="removeStat(stat)">Remove</button>
+    </div>
+    <div>
+        <input [(ngModel)]="newStat.stat" placeholder="Stat" name="newStat.stat" (keyup.enter)="addStat()" />
+        <input type="number" [(ngModel)]="newStat.value" placeholder="Value" name="newStat.value" (keyup.enter)="addStat()" />
+        <button type="button" (click)="addStat()">Add</button>
+    </div>
+</div>
+<div>
+    <label>Tags</label>
+    <div *ngFor="let tag of write.tags">
+        <input value="{{tag}}" />
+        <button type="button" (click)="removeTag(tag)">Remove</button>
+    </div>
+    <div>
+        <input [(ngModel)]="newTag" placeholder="Tag" name="newTag" (keyup.enter)="addTag()" />
+        <button type="button" (click)="addTag()">Add</button>
+    </div>
+</div>
+<div>
+    <button type="submit" class="btn btn-success">Submit</button>
+</div>
+</form>

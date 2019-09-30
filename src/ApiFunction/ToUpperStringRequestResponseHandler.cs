@@ -5,6 +5,7 @@ using Amazon.Lambda.APIGatewayEvents;
 using Kralizek.Lambda;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace ApiFunction
 {
@@ -23,15 +24,21 @@ namespace ApiFunction
 
         public async Task<APIGatewayProxyResponse> HandleAsync(APIGatewayProxyRequest input, ILambdaContext context)
         {
-            var @event = JsonConvert.DeserializeObject<Event>(input.Body);
+            if(input.HttpMethod == "POST")
+            {
+                var @event = JsonConvert.DeserializeObject<Event>(input.Body);
 
-            @event.When = DateTime.UtcNow;
-
-            await EventSaver.SaveEvent(@event);
+                await EventSaver.SaveEvent(@event, _logger);
+            }
 
             return new APIGatewayProxyResponse
             {
-                StatusCode = 200
+                StatusCode = 200,
+                Headers = new Dictionary<string, string>
+                {
+                    ["Access-Control-Allow-Headers"] = "*",
+                    ["Access-Control-Allow-Origin"] = "*"
+                }
             };
         }
     }
