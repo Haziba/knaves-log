@@ -1,5 +1,6 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,15 +16,11 @@ namespace ApiFunction
 
             var scanResponse = await client.ScanAsync(new ScanRequest
             {
-                TableName = "kl-log-events"
+                TableName = "kl-events"
             });
 
-            return scanResponse.Items.Select(x => new Event
-            {
-                Type = x["event-type"].S,
-                Note = x["note"].S,
-                When = DateTime.Parse(x["when"].S),
-            });
+            return scanResponse.Items
+                .Select(x => JsonConvert.DeserializeObject<Event>(x["body"].S));
         }
     }
 }

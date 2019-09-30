@@ -43,18 +43,16 @@ Resources:
                 httpMethod: "POST"
                 type: "aws_proxy"
 
-  LogEventsTable:
+  EventsTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: 'kl-logs'
+      TableName: 'kl-events'
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
       AttributeDefinitions:
-      -
-        AttributeName: 'id'
+      - AttributeName: 'when'
         AttributeType: 'S'
       KeySchema:
-      -
-        AttributeName: 'id'
+      - AttributeName: 'when'
         KeyType: 'HASH'
