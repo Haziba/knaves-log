@@ -24,6 +24,15 @@ namespace ApiFunction
 
         public async Task<APIGatewayProxyResponse> HandleAsync(APIGatewayProxyRequest input, ILambdaContext context)
         {
+            object body = null;
+
+            if(input.HttpMethod == "GET")
+            {
+                var events = await EventGetter.GetEvents();
+
+                body = events;
+            }
+
             if(input.HttpMethod == "POST")
             {
                 var @event = JsonConvert.DeserializeObject<Event>(input.Body);
@@ -34,6 +43,7 @@ namespace ApiFunction
             return new APIGatewayProxyResponse
             {
                 StatusCode = 200,
+                Body = JsonConvert.SerializeObject(body),
                 Headers = new Dictionary<string, string>
                 {
                     ["Access-Control-Allow-Headers"] = "*",
