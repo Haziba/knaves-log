@@ -25,6 +25,8 @@ export class WriterComponent implements OnInit {
 
   newTag = ''
 
+  submitting = false
+
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
@@ -32,10 +34,15 @@ export class WriterComponent implements OnInit {
 
   }
 
-  onSubmit() { 
-    console.log(this.write);
+  onSubmit(writeForm) { 
+    this.submitting = true;
+    writeForm.form.disable();
+
     this.http.post('https://mexw1gj4n5.execute-api.eu-west-1.amazonaws.com/Prod/graphql', this.write)
-      .subscribe(() => console.log('posted write'));
+      .subscribe(() => {
+        this.submitting = false;
+        writeForm.form.enable();
+      });
   }
 
   addStat() {

@@ -1,42 +1,64 @@
-<h1>Writer</h1>
-<form (ngSubmit)="onSubmit()">
-<div>
-    <label>Type:</label>
-    <input placeholder="Type" [(ngModel)]="write.type" name="write.type" />
-</div>
-<div>
-    <label>When:</label>
-    <input type="datetime-local" [ngModel]="write.when | date:'yyyy-MM-ddTHH:mm:ss" name="write.when" />
-</div>
-<div>
-    <label>Note</label>
-    <input value="{{write.note}}" placeholder="Note" [(ngModel)]="write.note" name="write.note" />
-</div>
-<div>
-    <label>Stats</label>
-    <div *ngFor="let stat of write.stats | keyvalue">
-        <input value="{{stat.key}}" />
-        <input number="number" value="{{stat.value}}" />
-        <button type="button" (click)="removeStat(stat)">Remove</button>
+<div class="container">
+  <h1>Writer</h1>
+  <form (ngSubmit)="onSubmit(writeForm)" #writeForm="ngForm">
+    <div class="form-group">
+        <label for="type">Type:</label>
+        <input class="form-control" placeholder="Type" [(ngModel)]="write.type" name="write.type" />
+    </div>
+    <div class="form-group">
+        <label>When:</label>
+        <input class="form-control" type="datetime-local" [ngModel]="write.when | date:'yyyy-MM-ddTHH:mm:ss'" name="write.when" />
+    </div>
+    <div class="form-group">
+        <label>Note</label>
+        <input class="form-control" value="{{write.note}}" placeholder="Note" [(ngModel)]="write.note" name="write.note" />
+    </div>
+    <div class="form-group">
+        <label>Stats</label>
+        <div class="row" *ngFor="let stat of write.stats | keyvalue">
+            <div class="col-xs-5">
+                <input class="form-control" value="{{stat.key}}" />
+            </div>
+            <div class="col-xs-5">
+                <input class="form-control" number="number" value="{{stat.value}}" />
+            </div>
+            <div class="col-xs-2">
+                <button class="btn btn-danger" type="button" (click)="removeStat(stat)">Remove</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-5">
+                <input class="form-control" [(ngModel)]="newStat.stat" placeholder="Stat" name="newStat.stat" (keyup.enter)="addStat()" />
+            </div>
+            <div class="col-xs-5">
+                <input class="form-control col-lg-5" type="number" [(ngModel)]="newStat.value" placeholder="Value" name="newStat.value" (keyup.enter)="addStat()" />
+            </div>
+            <div class="col-xs-2">
+                <button class="btn" type="button" (click)="addStat()">Add</button>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Tags</label>
+        <div class="row" *ngFor="let tag of write.tags">
+            <div class="col-xs-5">
+                <input class="form-control" value="{{tag}}" />
+            </div>
+            <div class="col-xs-2">
+                <button class="btn btn-danger" type="button" (click)="removeTag(tag)">Remove</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-5">
+                <input class="form-control" [(ngModel)]="newTag" placeholder="Tag" name="newTag" (keyup.enter)="addTag()" />
+            </div>
+            <div class="col-xs-2">
+                <button class="btn" type="button" (click)="addTag()">Add</button>
+            </div>
+        </div>
     </div>
     <div>
-        <input [(ngModel)]="newStat.stat" placeholder="Stat" name="newStat.stat" (keyup.enter)="addStat()" />
-        <input type="number" [(ngModel)]="newStat.value" placeholder="Value" name="newStat.value" (keyup.enter)="addStat()" />
-        <button type="button" (click)="addStat()">Add</button>
+        <button type="submit" class="btn btn-success">Submit</button>
     </div>
+  </form>
 </div>
-<div>
-    <label>Tags</label>
-    <div *ngFor="let tag of write.tags">
-        <input value="{{tag}}" />
-        <button type="button" (click)="removeTag(tag)">Remove</button>
-    </div>
-    <div>
-        <input [(ngModel)]="newTag" placeholder="Tag" name="newTag" (keyup.enter)="addTag()" />
-        <button type="button" (click)="addTag()">Add</button>
-    </div>
-</div>
-<div>
-    <button type="submit" class="btn btn-success">Submit</button>
-</div>
-</form>
