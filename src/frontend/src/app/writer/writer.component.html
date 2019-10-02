@@ -20,10 +20,10 @@
         <label>Stats</label>
         <div class="row" *ngFor="let stat of write.stats | keyvalue">
             <div class="col-xs-5">
-                <input class="form-control" value="{{stat.key}}" />
+                {{stat.key}}
             </div>
             <div class="col-xs-5">
-                <input class="form-control" number="number" value="{{stat.value}}" />
+                {{stat.value}}
             </div>
             <div class="col-xs-2">
                 <button class="btn btn-danger" type="button" (click)="removeStat(stat)">Remove</button>
@@ -48,7 +48,7 @@
         <label>Tags</label>
         <div class="row" *ngFor="let tag of write.tags">
             <div class="col-xs-5">
-                <input class="form-control" value="{{tag}}" />
+                {{tag}}
             </div>
             <div class="col-xs-2">
                 <button class="btn btn-danger" type="button" (click)="removeTag(tag)">Remove</button>
