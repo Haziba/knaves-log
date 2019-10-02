@@ -25,13 +25,24 @@ export class WriterComponent implements OnInit {
 
   newTag = ''
 
+  eventAutoCompletes = {}
+
+  autoComplete = {
+    types: [],
+    stats: [],
+    tags: []
+  }
+
   submitting = false
 
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
-    this.write.when = new Date();
-
+    this.http.get('https://mexw1gj4n5.execute-api.eu-west-1.amazonaws.com/Prod/graphql')
+      .subscribe(data => {
+        this.autoComplete.types = Object.keys(data);
+        this.eventAutoCompletes = data;
+      });
   }
 
   onSubmit(writeForm) { 
@@ -43,6 +54,12 @@ export class WriterComponent implements OnInit {
         this.submitting = false;
         writeForm.form.enable();
       });
+  }
+
+  updateType(){
+    console.log("Update type! - ", this.eventAutoCompletes[this.write.type]);
+    this.autoComplete.stats = this.eventAutoCompletes[this.write.type].Stats;
+    this.autoComplete.tags = this.eventAutoCompletes[this.write.type].Tags;
   }
 
   addStat() {

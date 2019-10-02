@@ -3,7 +3,10 @@
   <form (ngSubmit)="onSubmit(writeForm)" #writeForm="ngForm">
     <div class="form-group">
         <label for="type">Type:</label>
-        <input class="form-control" placeholder="Type" [(ngModel)]="write.type" name="write.type" />
+        <input class="form-control" placeholder="Type" [(ngModel)]="write.type" name="write.type" list="types" (change)="updateType()" />
+        <datalist id="types">
+            <option *ngFor="let type of autoComplete.types" value="{{type}}">
+        </datalist>
     </div>
     <div class="form-group">
         <label>When:</label>
@@ -28,7 +31,10 @@
         </div>
         <div class="row">
             <div class="col-xs-5">
-                <input class="form-control" [(ngModel)]="newStat.stat" placeholder="Stat" name="newStat.stat" (keyup.enter)="addStat()" />
+                <input class="form-control" [(ngModel)]="newStat.stat" placeholder="Stat" name="newStat.stat" list="stats" (keyup.enter)="addStat()" />
+                <datalist id="stats">
+                    <option *ngFor="let stat of autoComplete.stats" value="{{stat}}"></option>
+                </datalist>
             </div>
             <div class="col-xs-5">
                 <input class="form-control col-lg-5" type="number" [(ngModel)]="newStat.value" placeholder="Value" name="newStat.value" (keyup.enter)="addStat()" />
@@ -50,8 +56,11 @@
         </div>
         <div class="row">
             <div class="col-xs-5">
-                <input class="form-control" [(ngModel)]="newTag" placeholder="Tag" name="newTag" (keyup.enter)="addTag()" />
+                <input class="form-control" [(ngModel)]="newTag" placeholder="Tag" name="newTag" list="tags" (keyup.enter)="addTag()" />
             </div>
+            <datalist id="tags">
+                <option *ngFor="let tag of autoComplete.tags" value="{{tag}}"></option>
+            </datalist>
             <div class="col-xs-2">
                 <button class="btn" type="button" (click)="addTag()">Add</button>
             </div>

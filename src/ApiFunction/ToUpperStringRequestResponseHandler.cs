@@ -6,6 +6,7 @@ using Kralizek.Lambda;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ApiFunction
 {
@@ -30,14 +31,16 @@ namespace ApiFunction
             {
                 var events = await EventGetter.GetEvents();
 
-                body = events;
+                var logAutoCompletes = EventFolder.FoldLogEvents(events, _logger);
+
+                body = logAutoCompletes.ToDictionary(x => x.Type, x => x);
             }
 
             if(input.HttpMethod == "POST")
             {
-                var @event = JsonConvert.DeserializeObject<Event>(input.Body);
+                var @event = JsonConvert.DeserializeObject<Log>(input.Body);
 
-                await EventSaver.SaveEvent(@event, _logger);
+                await EventSaver.NewLog(@event, _logger);
             }
 
             return new APIGatewayProxyResponse

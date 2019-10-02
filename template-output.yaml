@@ -11,7 +11,7 @@ Resources:
   ApiFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://take-my-dog-please/e49d19d5adb0926fda7916662e09618d
+      CodeUri: s3://take-my-dog-please/4adb623e2dcf8256044330dfd9c30a8c
       Handler: ApiFunction::ApiFunction.Function::FunctionHandlerAsync
       Runtime: dotnetcore2.1
       Timeout: 20
@@ -43,16 +43,16 @@ Resources:
                   Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ApiFunction.Arn}/invocations
                 httpMethod: POST
                 type: aws_proxy
-  LogEventsTable:
+  EventsTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: kl-logs
+      TableName: kl-events
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
       AttributeDefinitions:
-      - AttributeName: id
+      - AttributeName: when
         AttributeType: S
       KeySchema:
-      - AttributeName: id
+      - AttributeName: when
         KeyType: HASH

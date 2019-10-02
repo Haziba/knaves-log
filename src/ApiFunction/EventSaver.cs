@@ -11,7 +11,7 @@ namespace ApiFunction
 {
     class EventSaver
     {
-        public async static Task SaveEvent(Event @event, ILogger<ToUpperStringRequestResponseHandler> _logger)
+        public async static Task NewLog(Log log, ILogger<ToUpperStringRequestResponseHandler> _logger)
         {
             var client = new AmazonDynamoDBClient();
 
@@ -23,11 +23,11 @@ namespace ApiFunction
                 },
                 ["event"] = new AttributeValue
                 {
-                    S = "CREATE_LOG",
+                    S = "LOG_CREATED",
                 },
                 ["body"] = new AttributeValue
                 {
-                    S = JsonConvert.SerializeObject(@event)
+                    S = JsonConvert.SerializeObject(log)
                 }
             };
 
@@ -41,7 +41,7 @@ namespace ApiFunction
         }
     }
 
-    class Event
+    class Log
     {
         public string Type { get; set; }
         public DateTime When { get; set; }
