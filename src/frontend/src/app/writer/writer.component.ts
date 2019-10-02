@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { Write } from '../write';
 import { HttpClient } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-writer',
@@ -33,9 +34,10 @@ export class WriterComponent implements OnInit {
     tags: []
   }
 
-  submitting = false
-
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private toastr: ToastrService
+    ) { }
 
   ngOnInit() {
     this.http.get('https://mexw1gj4n5.execute-api.eu-west-1.amazonaws.com/Prod/graphql')
@@ -46,20 +48,23 @@ export class WriterComponent implements OnInit {
   }
 
   onSubmit(writeForm) { 
-    this.submitting = true;
     writeForm.form.disable();
 
-    this.http.post('https://mexw1gj4n5.execute-api.eu-west-1.amazonaws.com/Prod/graphql', this.write)
-      .subscribe(() => {
-        this.submitting = false;
+    this.http.post('https://mexw1gj4n5.execute-api.eu-west-1.amazonaws.com/Prod/graphql', this.write, { observe: 'response' })
+      .subscribe(resp => {
         writeForm.form.enable();
+        this.toastr.error('Success');
+      }, error => {
+        writeForm.form.enable();
+        this.toastr.error('Failure');
       });
   }
 
   updateType(){
-    console.log("Update type! - ", this.eventAutoCompletes[this.write.type]);
-    this.autoComplete.stats = this.eventAutoCompletes[this.write.type].Stats;
-    this.autoComplete.tags = this.eventAutoCompletes[this.write.type].Tags;
+    this.autoComplete.stats = this.eventAutoCompletes[this.write.type] != null ?
+      this.eventAutoCompletes[this.write.type].Stats : [];
+    this.autoComplete.tags = this.eventAutoCompletes[this.write.type] != null ?
+      this.eventAutoCompletes[this.write.type].Tags : [];
   }
 
   addStat() {
