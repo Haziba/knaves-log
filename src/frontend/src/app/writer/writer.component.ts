@@ -60,11 +60,19 @@ export class WriterComponent implements OnInit {
       });
   }
 
-  updateType(){
-    this.autoComplete.stats = this.eventAutoCompletes[this.write.type] != null ?
-      this.eventAutoCompletes[this.write.type].Stats : [];
-    this.autoComplete.tags = this.eventAutoCompletes[this.write.type] != null ?
-      this.eventAutoCompletes[this.write.type].Tags : [];
+  updateSuggestions(){
+    let eventAutoComplete = this.eventAutoCompletes[this.write.type];
+
+    if(eventAutoComplete == null){
+      this.autoComplete.stats = [];
+      this.autoComplete.tags = [];
+      return;
+    }
+
+    this.autoComplete.stats = eventAutoComplete.Stats
+      .filter(stat => Object.keys(this.write.stats).includes(stat));
+    this.autoComplete.tags = eventAutoComplete.Tags
+      .filter(tag => this.write.tags.includes(tag));
   }
 
   addStat() {
@@ -73,20 +81,26 @@ export class WriterComponent implements OnInit {
       stat: '',
       value: 0
     };
-    console.log(this.write.stats);
+
+    this.updateSuggestions();
   }
 
   removeStat(stat){
-    console.log(stat);
     delete this.write.stats[stat.key];
+
+    this.updateSuggestions();
   }
 
   addTag(){
     this.write.tags.push(this.newTag);
     this.newTag = '';
+
+    this.updateSuggestions();
   }
 
   removeTag(tag){
     this.write.tags.splice(this.write.tags.indexOf(tag), 1);
+
+    this.updateSuggestions();
   }
 }

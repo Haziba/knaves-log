@@ -3,7 +3,7 @@
   <form (ngSubmit)="onSubmit(writeForm)" #writeForm="ngForm">
     <div class="form-group">
         <label for="type">Type:</label>
-        <input class="form-control" placeholder="Type" [(ngModel)]="write.type" name="write.type" list="types" (change)="updateType()" />
+        <input class="form-control" placeholder="Type" [(ngModel)]="write.type" name="write.type" list="types" (change)="updateSuggestions()" />
         <datalist id="types">
             <option *ngFor="let type of autoComplete.types" value="{{type}}">
         </datalist>
