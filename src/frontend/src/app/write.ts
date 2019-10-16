@@ -3,5 +3,11 @@ export class Write {
     when: Date = new Date();
     tags: string[];
     note: string;
-    stats: { [stat: string] : number }
+    stats: Stat[];
+}
+
+export class Stat {
+    name: string;
+    value: number;
+    units: string;
 }

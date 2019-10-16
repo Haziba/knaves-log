@@ -29,16 +29,16 @@ namespace ApiFunction
 
             if(input.HttpMethod == "GET")
             {
-                var events = await EventGetter.GetEvents();
+                var events = await EventGetter.GetEvents(_logger);
 
-                var logAutoCompletes = EventFolder.FoldLogEvents(events, _logger);
+                var logAutoCompletes = EventFolder.AutoComplete(events, _logger);
 
                 body = logAutoCompletes.ToDictionary(x => x.Type, x => x);
             }
 
             if(input.HttpMethod == "POST")
             {
-                var @event = JsonConvert.DeserializeObject<Log>(input.Body);
+                var @event = JsonConvert.DeserializeObject<Log_V1>(input.Body);
 
                 await EventSaver.NewLog(@event, _logger);
             }

@@ -18,12 +18,15 @@
     </div>
     <div class="form-group">
         <label>Stats</label>
-        <div class="row" *ngFor="let stat of write.stats | keyvalue">
+        <div class="row" *ngFor="let stat of write.stats">
             <div class="col-xs-5">
-                {{stat.key}}
+                {{stat.name}}
             </div>
-            <div class="col-xs-5">
+            <div class="col-xs-2">
                 {{stat.value}}
+            </div>
+            <div class="col-xs-3">
+                {{stat.units}}
             </div>
             <div class="col-xs-2">
                 <button class="btn btn-danger" type="button" (click)="removeStat(stat)">Remove</button>
@@ -31,13 +34,19 @@
         </div>
         <div class="row">
             <div class="col-xs-5">
-                <input class="form-control" [(ngModel)]="newStat.stat" placeholder="Stat" name="newStat.stat" list="stats" (keyup.enter)="addStat()" />
-                <datalist id="stats">
-                    <option *ngFor="let stat of autoComplete.stats" value="{{stat}}"></option>
+                <input class="form-control" [(ngModel)]="newStat.name" placeholder="Stat" name="newStat.stat" list="statNames" (keyup.enter)="addStat()" (change)="updateStatSuggestions()" />
+                <datalist id="statNames">
+                    <option *ngFor="let statName of autoComplete.statNames" value="{{statName}}"></option>
                 </datalist>
             </div>
-            <div class="col-xs-5">
-                <input class="form-control col-lg-5" type="number" [(ngModel)]="newStat.value" placeholder="Value" name="newStat.value" (keyup.enter)="addStat()" />
+            <div class="col-xs-2">
+                <input class="form-control" type="number" [(ngModel)]="newStat.value" placeholder="Value" name="newStat.value" (keyup.enter)="addStat()" />
+            </div>
+            <div class="col-xs-3">
+                <input class="form-control" [(ngModel)]="newStat.units" name="newStat.units" list="statUnits" (keyup.enter)="addStat()" />
+                <datalist id="statUnits">
+                    <option *ngFor="let statUnits of autoComplete.statUnits" value="{{statUnits}}"></option>
+                </datalist>
             </div>
             <div class="col-xs-2">
                 <button class="btn" type="button" (click)="addStat()">Add</button>

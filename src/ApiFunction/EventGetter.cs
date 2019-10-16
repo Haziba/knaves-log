@@ -1,5 +1,7 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +11,7 @@ namespace ApiFunction
 {
     class EventGetter
     {
-        public static async Task<IEnumerable<Event>> GetEvents()
+        public static async Task<IEnumerable<Event>> GetEvents(ILogger<ToUpperStringRequestResponseHandler> _logger)
         {
             var client = new AmazonDynamoDBClient();
 
@@ -19,18 +21,24 @@ namespace ApiFunction
             });
 
             return scanResponse.Items
-                .Select(x => new Event {
-                    EventType = x["event"].S,
-                    When = DateTime.Parse(x["when"].S),
-                    Body = x["body"].S
+                .Select(x => {
+                    try
+                    {
+                        var modelVersion = x.ContainsKey("model_version") ? x["model_version"].N : "0";
+                        var @event = new Event
+                        {
+                            EventType = x["event"].S,
+                            ModelVersion = int.Parse(modelVersion),
+                            When = DateTime.Parse(x["when"].S),
+                            Body = x["body"].S
+                        };
+                        return @event;
+                    } catch(Exception ex)
+                    {
+                        _logger.LogInformation("Error getting event - " + JsonConvert.SerializeObject(x) + " - " + ex.Message);
+                        return new Event();
+                    }
                 });
         }
-    }
-
-    class Event
-    {
-        public string EventType;
-        public DateTime When { get; set; }
-        public string Body { get; set; }
     }
 }

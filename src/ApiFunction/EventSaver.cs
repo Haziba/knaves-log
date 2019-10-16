@@ -11,12 +11,16 @@ namespace ApiFunction
 {
     class EventSaver
     {
-        public async static Task NewLog(Log log, ILogger<ToUpperStringRequestResponseHandler> _logger)
+        public async static Task NewLog(Log_V1 log, ILogger<ToUpperStringRequestResponseHandler> _logger)
         {
             var client = new AmazonDynamoDBClient();
 
             var eventItem = new Dictionary<string, AttributeValue>
             {
+                ["model_version"] = new AttributeValue
+                {
+                    N = "1"
+                },
                 ["when"] = new AttributeValue
                 {
                     S = DateTime.UtcNow.ToString("o")
@@ -39,14 +43,5 @@ namespace ApiFunction
                 Item = eventItem
             });
         }
-    }
-
-    class Log
-    {
-        public string Type { get; set; }
-        public DateTime When { get; set; }
-        public IEnumerable<string> Tags { get; set; }
-        public string Note { get; set; }
-        public IDictionary<string, int> Stats { get; set; }
     }
 }
