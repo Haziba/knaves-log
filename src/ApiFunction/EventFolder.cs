@@ -32,21 +32,26 @@ namespace ApiFunction
                             logs.Add(new LogAutoComplete
                             {
                                 Type = log.Type,
-                                StatsAndUnits = new Dictionary<string, IList<string>>(),
+                                StatsAndUnits = new LogAutoComplete.StatAndUnits[0],
                                 Tags = new List<string>()
                             });
                         }
 
                         var logAutoComplete = logs.First(x => x.Type == log.Type);
 
-                        if(log.Stats != null)
-                            foreach(var stat in log.Stats)
+                        var stats = new Dictionary<string, IList<string>>();
+
+                        if (log.Stats != null)
+                        {
+                            foreach (var stat in log.Stats)
                             {
-                                if (!logAutoComplete.StatsAndUnits.ContainsKey(stat.Name))
-                                    logAutoComplete.StatsAndUnits.Add(stat.Name, new List<string>());
-                                if (!string.IsNullOrEmpty(stat.Units) && !logAutoComplete.StatsAndUnits[stat.Name].Contains(stat.Units))
-                                    logAutoComplete.StatsAndUnits[stat.Name].Add(stat.Units);
+                                if (!stats.ContainsKey(stat.Name))
+                                    stats.Add(stat.Name, new List<string>());
+                                if (!string.IsNullOrEmpty(stat.Units) && !stats[stat.Name].Contains(stat.Units))
+                                    stats[stat.Name].Add(stat.Units);
                             }
+                            logAutoComplete.StatsAndUnits = stats.Select(x => new LogAutoComplete.StatAndUnits { Stat = x.Key, Units = x.Value }).ToArray();
+                        }
                         if(log.Tags != null)
                             logAutoComplete.Tags = logAutoComplete.Tags.Union(log.Tags).Distinct();
 
@@ -78,7 +83,13 @@ namespace ApiFunction
     public class LogAutoComplete
     {
         public string Type { get; set; }
-        public IDictionary<string, IList<string>> StatsAndUnits { get; set; }
+        public IEnumerable<StatAndUnits> StatsAndUnits { get; set; }
         public IEnumerable<string> Tags { get; set; }
+
+        public class StatAndUnits
+        {
+            public string Stat { get; set; }
+            public IEnumerable<string> Units { get; set; }
+        }
     }
 }

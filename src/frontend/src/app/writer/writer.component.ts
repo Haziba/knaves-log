@@ -19,21 +19,14 @@ export class WriterComponent implements OnInit {
     stats: []
   }
 
-  newStat: Stat = {
-    name: '',
-    value: 0,
-    units: ''
-  }
-
   newTag = ''
 
   eventAutoCompletes = {}
 
   autoComplete = {
     types: [],
-    statNames: [],
-    statUnits: [],
-    tags: []
+    tags: [],
+    stats: []
   }
 
   constructor(
@@ -75,58 +68,21 @@ export class WriterComponent implements OnInit {
     let eventAutoComplete = this.eventAutoCompletes[this.write.type];
 
     if(eventAutoComplete == null){
-      this.autoComplete.statNames = [];
+      this.autoComplete.stats = [];
       this.autoComplete.tags = [];
       return;
     }
 
-    let allStats = Object.keys(eventAutoComplete.StatsAndUnits);
-    this.autoComplete.statNames = allStats.filter(stat => {
-      let allUnits = eventAutoComplete.StatsAndUnits[stat];
-
-      if(allUnits.length == 0)
-        return true;
-
-      let unusedUnits = allUnits.filter(units => !this.write.stats.find(stat => stat.units == units));
-      return unusedUnits.length > 0;
-    });
-    
-    this.autoComplete.statUnits = eventAutoComplete.StatsAndUnits[this.newStat.name];
+    this.autoComplete.stats = eventAutoComplete.StatsAndUnits;
 
     this.autoComplete.tags = eventAutoComplete.Tags
       .filter(tag => this.write.tags.includes(tag));
   }
 
-  updateStatSuggestions(){
-    let statsAndUnits = this.eventAutoCompletes[this.write.type].StatsAndUnits[this.newStat.name];
-
-    if(statsAndUnits == null){
-      this.autoComplete.statUnits = [];
-      return;
-    }
-
-    let writeStats = this.write.stats.filter(stat => stat.name == this.newStat.name);
-    
-    if(writeStats.length == 0){
-      this.autoComplete.statUnits = statsAndUnits;
-      return;
-    }
-
-    let usedUnits = writeStats.map(writeStat => writeStat.units);
-
-    this.autoComplete.statUnits = statsAndUnits.filter(units => usedUnits.indexOf(units) < 0);
-  }
-
-  addStat() {
-    this.write.stats.push(this.newStat);
-    this.newStat = {
-      name: '',
-      value: 0,
-      units: ''
-    };
+  addStat(event) {
+    this.write.stats.push(event.newStat);
 
     this.updateSuggestions();
-    this.updateStatSuggestions();
   }
 
   removeStat(stat){

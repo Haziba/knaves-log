@@ -7,11 +7,13 @@ import { ToastrModule } from 'ngx-toastr';
 
 import { AppComponent } from './app.component';
 import { WriterComponent } from './writer/writer.component';
+import { WriterStatsComponent } from './writer-stats/writer-stats.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    WriterComponent
+    WriterComponent,
+    WriterStatsComponent
   ],
   imports: [
     BrowserModule,

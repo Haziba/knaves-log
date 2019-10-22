@@ -11,3 +11,8 @@ export class Stat {
     value: number;
     units: string;
 }
+
+export class StatAndUnits {
+    Stat: string;
+    Units: string[];
+}
