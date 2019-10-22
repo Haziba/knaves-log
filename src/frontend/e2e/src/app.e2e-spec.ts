@@ -61,7 +61,7 @@ describe('App', () => {
 
     expect(page.getSubmitButton().isEnabled()).toEqual(false);
     expect(page.getValidationErrors()).toEqual(['Type required']);
-  })
+  });
 
   describe('a fully populated form', () => {
     const type = 'did some rad stuff';

@@ -1,12 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Stat, StatAndUnits } from '../write';
+import { SuggestionsService } from '../suggestions.service';
 
 @Component({
   selector: 'app-writer-stats',
   templateUrl: './writer-stats.component.html',
   styleUrls: ['./writer-stats.component.css']
 })
-export class WriterStatsComponent implements OnInit {
+export class WriterStatsComponent {
   private _statsAndUnits: StatAndUnits[];
 
   @Input() stats: Stat[] = [];
@@ -21,7 +22,7 @@ export class WriterStatsComponent implements OnInit {
     return this._statsAndUnits;
   }
 
-  @Input() autoComplete = {
+  private autoComplete = {
     stats: [],
     units: []
   };
@@ -31,10 +32,9 @@ export class WriterStatsComponent implements OnInit {
 
   newStat: Stat = new Stat();
 
-  constructor() { }
-
-  ngOnInit() {
-  }
+  constructor(
+    private suggestionsService: SuggestionsService
+  ) { }
 
   addStat(){
     this.onAddStat.emit({ newStat: this.newStat });

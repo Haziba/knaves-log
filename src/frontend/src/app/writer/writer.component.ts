@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Write, Stat } from '../write';
+import { Write, Stat, AutoComplete } from '../write';
 import { HttpClient } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
+import { SuggestionsService } from '../suggestions.service';
 
 @Component({
   selector: 'app-writer',
@@ -11,37 +12,22 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class WriterComponent implements OnInit {
 
-  write: Write = {
-    type: '',
-    when: new Date(),
-    tags: [],
-    note: '',
-    stats: []
-  }
+  write: Write = new Write();
 
   newTag = ''
 
-  eventAutoCompletes = {}
-
-  autoComplete = {
-    types: [],
-    tags: [],
-    stats: []
-  }
+  autoComplete: AutoComplete = new AutoComplete();
 
   constructor(
     private http: HttpClient,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private suggestionsService: SuggestionsService
     ) { }
 
   ngOnInit() {
-    this.http.get('/graphql')
-      .subscribe(data => {
-        this.autoComplete.types = Object.keys(data);
-        this.eventAutoCompletes = data;
-
-        this.toastr.success('Cool beans');
-      });
+    this.suggestionsService.updateSuggestions.subscribe(autoComplete => this.autoComplete = autoComplete);
+    this.suggestionsService.load()
+      .then(autoComplete => this.autoComplete = autoComplete);
   }
 
   onSubmit(writeForm) { 
@@ -49,13 +35,7 @@ export class WriterComponent implements OnInit {
 
     this.http.post('/graphql', this.write, { observe: 'response' })
       .subscribe(resp => {
-        this.write = {
-          type: '',
-          when: new Date(),
-          tags: [],
-          note: '',
-          stats: []
-        }
+        this.write = new Write();
         this.updateSuggestions();
 
         writeForm.form.enable();
@@ -67,18 +47,7 @@ export class WriterComponent implements OnInit {
   }
 
   updateSuggestions(){
-    let eventAutoComplete = this.eventAutoCompletes[this.write.type];
-
-    if(eventAutoComplete == null){
-      this.autoComplete.stats = [];
-      this.autoComplete.tags = [];
-      return;
-    }
-
-    this.autoComplete.stats = eventAutoComplete.StatsAndUnits;
-
-    this.autoComplete.tags = eventAutoComplete.Tags
-      .filter(tag => !this.write.tags.includes(tag));
+    this.autoComplete = this.suggestionsService.updateWrite(this.write);
   }
 
   addStat(event) {
