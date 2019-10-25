@@ -110,6 +110,37 @@ describe('App', () => {
     expect(page.getTypeSuggestionList()).toEqual(['Dogs', 'Food']);
   });
 
+  it('should recommend appropriate unused stat suggestions from the api', () => {
+    page.navigateTo();
+
+    expect(page.getStatNameSuggestionList()).toEqual([]);
+    expect(page.getStatUnitsSuggestionList()).toEqual([]);
+
+    page.setType('Food');
+
+    expect(page.getStatNameSuggestionList()).toEqual(['Flax', 'Blueberries']);
+
+    page.setStatName('Flax');
+    page.setStatValue('1');
+
+    expect(page.getStatUnitsSuggestionList()).toEqual(['tbsp', 'g']);
+
+    page.setStatUnits('tbsp');
+    page.getStatAddButton().click();
+
+    page.setStatName('Flax');
+    page.setStatValue('15');
+
+    expect(page.getStatUnitsSuggestionList()).toEqual(['g']);
+
+    page.setStatUnits('g');
+    page.getStatAddButton().click();
+
+    page.setStatName('Flax');
+
+    expect(page.getStatUnitsSuggestionList()).toEqual([]);
+  });
+
   afterEach(async () => {
     // Assert that there are no errors emitted from the browser
     const logs = await browser.manage().logs().get(logging.Type.BROWSER);

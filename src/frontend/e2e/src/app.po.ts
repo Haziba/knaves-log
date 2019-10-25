@@ -15,6 +15,19 @@ export class AppPage {
     });
   }
 
+  setStatName(name: string) {
+    element(by.css('input[name=newStat\\.name]')).sendKeys(name);
+    element(by.css('body')).click();
+  }
+
+  setStatValue(value: string){
+    element(by.css('input[name=newStat\\.value]')).sendKeys(value);
+  }
+
+  setStatUnits(units: string){
+    element(by.css('input[name=newStat\\.units]')).sendKeys(units);
+  }
+
   setNote(note: string) {
     element(by.css('input[name=write\\.note]')).sendKeys(note);
   }
@@ -31,6 +44,7 @@ export class AppPage {
 
   setType(type: string) {
     element(by.css('input[name=write\\.type]')).sendKeys(type);
+    element(by.css('body')).click();
   }
 
   navigateTo() {
@@ -61,5 +75,17 @@ export class AppPage {
 
   getTypeSuggestionList(){
     return element.all(by.css('#types > option')).getAttribute('value') as Promise<string>;
+  }
+
+  getStatNameSuggestionList(){
+    return element.all(by.css('#statNames > option')).getAttribute('value') as Promise<string>;
+  }
+
+  getStatUnitsSuggestionList(){
+    return element.all(by.css('#statUnits > option')).getAttribute('value') as Promise<string>;
+  }
+
+  getStatAddButton(){
+    return element.all(by.css('button[name=newStat\\.add]'));
   }
 }
