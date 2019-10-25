@@ -16,7 +16,7 @@
     </div>
     <div class="row">
         <div class="col-xs-5">
-            <input class="form-control" [(ngModel)]="newStat.name" placeholder="Stat" name="newStat.stat"
+            <input class="form-control" [(ngModel)]="newStat.name" placeholder="Stat" name="newStat.name"
                 list="statNames" (keyup.enter)="addStat()" (change)="updateStatSuggestions()" />
             <datalist id="statNames">
                 <option *ngFor="let stat of autoComplete.stats" value="{{stat}}"></option>
@@ -34,7 +34,7 @@
             </datalist>
         </div>
         <div class="col-xs-2">
-            <button class="btn" type="button" (click)="addStat()">Add</button>
+            <button class="btn" type="button" name="newStat.add" (click)="addStat()">Add</button>
         </div>
     </div>
 </div>

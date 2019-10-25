@@ -35,17 +35,19 @@ export class WriterComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-    this.http.get('https://mexw1gj4n5.execute-api.eu-west-1.amazonaws.com/Prod/graphql')
+    this.http.get('/graphql')
       .subscribe(data => {
         this.autoComplete.types = Object.keys(data);
         this.eventAutoCompletes = data;
+
+        this.toastr.success('Cool beans');
       });
   }
 
   onSubmit(writeForm) { 
     writeForm.form.disable();
 
-    this.http.post('https://mexw1gj4n5.execute-api.eu-west-1.amazonaws.com/Prod/graphql', this.write, { observe: 'response' })
+    this.http.post('/graphql', this.write, { observe: 'response' })
       .subscribe(resp => {
         this.write = {
           type: '',

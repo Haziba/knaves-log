@@ -50,6 +50,7 @@ export class WriterStatsComponent implements OnInit {
 
     if(statAndUnits == null){
       this.autoComplete.units = [];
+      return;
     }
 
     let usedUnits = this.stats.map(writeStat => writeStat.units);

@@ -10,7 +10,7 @@
     </div>
     <div class="form-group">
         <label>When:</label>
-        <input class="form-control" type="datetime-local" [ngModel]="write.when | date:'yyyy-MM-ddTHH:mm:ss'" name="write.when" />
+        <input class="form-control" type="datetime-local" [ngModel]="write.when | date:'yyyy-MM-ddTHH:mm:ss'" name="write.when" (change)="write.when = $event.target.value" />
     </div>
     <div class="form-group">
         <label>Note</label>
@@ -29,13 +29,13 @@
         </div>
         <div class="row">
             <div class="col-xs-5">
-                <input class="form-control" [(ngModel)]="newTag" placeholder="Tag" name="newTag" list="tags" (keyup.enter)="addTag()" />
+                <input class="form-control" [(ngModel)]="newTag" placeholder="Tag" name="newTag.tag" list="tags" (keyup.enter)="addTag()" />
             </div>
             <datalist id="tags">
                 <option *ngFor="let tag of autoComplete.tags" value="{{tag}}"></option>
             </datalist>
             <div class="col-xs-2">
-                <button class="btn" type="button" (click)="addTag()">Add</button>
+                <button class="btn" type="button" name="newTag.add" (click)="addTag()">Add</button>
             </div>
         </div>
     </div>
