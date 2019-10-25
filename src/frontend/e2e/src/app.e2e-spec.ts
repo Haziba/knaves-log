@@ -13,51 +13,45 @@ describe('App', () => {
     page = new AppPage();
     wiremock = new Wiremock();
 
-    wiremock.get("/graphql", {
-      "Dogs": {
-        "Type": "Dogs",
-        "StatsAndUnits": [{
-          "Stat": "Walks (total)",
-          "Units": []
+    wiremock.get('/graphql', {
+      'Dogs': {
+        'Type': 'Dogs',
+        'StatsAndUnits': [{
+          'Stat': 'Walks (total)',
+          'Units': []
         },{
-          "Stat": "Walks (time) (mins)",
-          "Units": []
+          'Stat': 'Walks',
+          'Units': ['mins']
         }],
-        "Tags": [
-          "rainy",
-          "street-walk",
-          "Run"
+        'Tags': [
+          'rainy',
+          'street-walk',
+          'Run'
         ]
       },
-      "Food": {
-        "Type": "Food",
-        "StatsAndUnits": [{
-          "Stat": "Flax",
-          "Units": []
+      'Food': {
+        'Type': 'Food',
+        'StatsAndUnits': [{
+          'Stat': 'Flax',
+          'Units': ['tbsp', 'g']
         },{
-          "Stat":"Blueberries",
-          "Units":[]
-        },{
-          "Stat":"Sugar",
-          "Units": []
-        },{
-          "Stat": "Salt",
-          "Units":[]
+          'Stat':'Blueberries',
+          'Units':[]
         }],
-        "Tags": [
-          "Workday"
+        'Tags': [
+          'Workday'
         ]
       }
     });
 
-    wiremock.post("/graphql", {}, 200, {});
+    wiremock.post('/graphql', {}, 200, {});
   });
 
   afterEach(() => {
     wiremock.stop();
   });
 
-  it('should hit graphql', done => {
+  describe('a fully populated form', () => {
     const type = 'did some rad stuff';
     const tags = ['wore sunglasses', 'kept doing backflips'];
     const when = new Date(2019, 0, 1);
@@ -76,41 +70,45 @@ describe('App', () => {
       units: 'kg'
     }];
 
-    page.navigateTo();
+    beforeEach(() => {
+      page.navigateTo();
 
-    page.getToastMessage().click();
-    browser.wait(protractor.ExpectedConditions.invisibilityOf(page.getToastMessage()), 5000, 'Toast message taking too long to clear');
+      page.getToastMessage().click();
+      browser.wait(protractor.ExpectedConditions.invisibilityOf(page.getToastMessage()), 5000, 'Toast message taking too long to clear');
 
-    page.setType(type);
-    page.setTags(tags);
-    page.setWhen(when.getDate() + '-' + when.getMonth() + '-' + when.getFullYear() + '\t00:00');
-    page.setNote(note);
-    page.setStats(stats);
-    page.getSubmitButton().click();
+      page.setType(type);
+      page.setTags(tags);
+      page.setWhen(when.getDate() + '-' + when.getMonth() + '-' + when.getFullYear() + '\t00:00');
+      page.setNote(note);
+      page.setStats(stats);
+      page.getSubmitButton().click();
+    })
 
-    browser.wait(protractor.ExpectedConditions.presenceOf(page.getToastMessage()), 5000, 'Toast message taking too long to appear');
+    it('posts successfully', done => {
+      browser.wait(protractor.ExpectedConditions.presenceOf(page.getToastMessage()), 5000, 'Toast message taking too long to appear');
 
-    expect(page.getToastMessageList()).toContain('Success');
+      expect(page.getToastMessageList()).toContain('Success');
 
-    browser.waitForAngularEnabled()
-      .then(() => {
-        const verify = wiremock.verifyPost('/graphql', {
-          type: type,
-          tags: tags,
-          when: when,
-          note: note,
-          stats: stats
+      browser.waitForAngularEnabled()
+        .then(() => {
+          const verify = wiremock.verifyPost('/graphql', {
+            type: type,
+            tags: tags,
+            when: when,
+            note: note,
+            stats: stats
+          });
+          expect(verify).toEqual(true);
+          done();
         });
-        expect(verify).toEqual(true);
-        done();
-      });
+    });
   });
 
-  it('should give type suggestions from the api', () => {
+  it('should recommend type suggestions from the api', () => {
     page.navigateTo();
 
     expect(page.getTypeSuggestionList()).toEqual(['Dogs', 'Food']);
-  })
+  });
 
   afterEach(async () => {
     // Assert that there are no errors emitted from the browser
