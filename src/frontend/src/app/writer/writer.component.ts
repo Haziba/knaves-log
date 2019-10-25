@@ -78,7 +78,7 @@ export class WriterComponent implements OnInit {
     this.autoComplete.stats = eventAutoComplete.StatsAndUnits;
 
     this.autoComplete.tags = eventAutoComplete.Tags
-      .filter(tag => this.write.tags.includes(tag));
+      .filter(tag => !this.write.tags.includes(tag));
   }
 
   addStat(event) {

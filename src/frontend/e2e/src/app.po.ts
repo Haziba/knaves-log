@@ -27,6 +27,14 @@ export class AppPage {
     return element.all(by.css('button[name=stat\\.remove]'));
   }
 
+  getTagAddButton() {
+    return element(by.css('button[name=newTag\\.add]'));
+  }
+
+  setTagName(tagName: string) {
+    element(by.css('input[name=newTag\\.tag]')).sendKeys(tagName);
+  }
+
   setStats(stats: { name: string; value: number; units: string; }[]) {
     const newStatName = element(by.css('input[name=newStat\\.name]'));
     const newStatValue = element(by.css('input[name=newStat\\.value]'));
@@ -113,5 +121,9 @@ export class AppPage {
 
   getStatAddButton(){
     return element.all(by.css('button[name=newStat\\.add]'));
+  }
+
+  getTagNameSuggestionList(){
+    return element.all(by.css('#tags > option')).getAttribute('value') as Promise<string>;
   }
 }

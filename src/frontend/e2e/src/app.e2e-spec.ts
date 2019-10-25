@@ -39,7 +39,8 @@ describe('App', () => {
           'Units':[]
         }],
         'Tags': [
-          'Workday'
+          'Workday',
+          'Ate out'
         ]
       }
     });
@@ -156,6 +157,21 @@ describe('App', () => {
 
     expect(page.getStatUnitsSuggestionList()).toEqual(['g']);
   });
+
+  it('should recommend unused tag suggestions from the api', () => {
+    page.navigateTo();
+
+    expect(page.getTagNameSuggestionList()).toEqual([]);
+
+    page.setType('Food');
+
+    expect(page.getTagNameSuggestionList()).toEqual(['Workday', 'Ate out']);
+
+    page.setTagName('Workday');
+    page.getTagAddButton().click();
+
+    expect(page.getTagNameSuggestionList()).toEqual(['Ate out']);
+  })
 
   afterEach(async () => {
     // Assert that there are no errors emitted from the browser
