@@ -136,9 +136,25 @@ describe('App', () => {
     page.setStatUnits('g');
     page.getStatAddButton().click();
 
+    const stats = page.getStats();
+
+    expect(page.getStats()).toEqual([{
+      name: 'Flax',
+      value: '1',
+      units: 'tbsp'
+    },{
+      name: 'Flax',
+      value: '15',
+      units: 'g'
+    }]);
+
     page.setStatName('Flax');
 
     expect(page.getStatUnitsSuggestionList()).toEqual([]);
+
+    page.getStatsRemoveButtons().first().click();
+
+    expect(page.getStatUnitsSuggestionList()).toEqual(['g']);
   });
 
   afterEach(async () => {

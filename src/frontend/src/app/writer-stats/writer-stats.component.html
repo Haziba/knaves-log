@@ -1,17 +1,17 @@
 <div class="form-group">
     <label>Stats</label>
     <div class="row" *ngFor="let stat of stats">
-        <div class="col-xs-5">
+        <div class="col-xs-5" name="stat.name">
             {{stat.name}}
         </div>
-        <div class="col-xs-2">
+        <div class="col-xs-2" name="stat.value">
             {{stat.value}}
         </div>
-        <div class="col-xs-3">
+        <div class="col-xs-3" name="stat.units">
             {{stat.units}}
         </div>
         <div class="col-xs-2">
-            <button class="btn btn-danger" type="button" (click)="removeStat(stat)">Remove</button>
+            <button class="btn btn-danger" type="button" name="stat.remove" (click)="removeStat(stat)">Remove</button>
         </div>
     </div>
     <div class="row">

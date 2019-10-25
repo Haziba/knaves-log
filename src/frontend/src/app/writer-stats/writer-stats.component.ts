@@ -27,6 +27,7 @@ export class WriterStatsComponent implements OnInit {
   };
 
   @Output('onAddStat') onAddStat: EventEmitter<any> = new EventEmitter<any>();
+  @Output('onRemoveStat') onRemoveStat: EventEmitter<any> = new EventEmitter<any>();
 
   newStat: Stat = new Stat();
 
@@ -39,10 +40,14 @@ export class WriterStatsComponent implements OnInit {
     this.onAddStat.emit({ newStat: this.newStat });
 
     this.newStat = new Stat();
+
+    this.updateStatSuggestions();
   }
 
   removeStat(stat){
+    this.onRemoveStat.emit({ stat: stat });
 
+    this.updateStatSuggestions();
   }
 
   updateStatSuggestions(){

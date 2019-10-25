@@ -1,6 +1,32 @@
 import { browser, by, element } from 'protractor';
 
 export class AppPage {
+  getStats() {
+    return new Promise(resolve => {
+      const statNames = element.all(by.css('[name=stat\\.name]')).getText() as Promise<string>;
+      const statValues = element.all(by.css('[name=stat\\.value]')).getText() as Promise<string>;
+      const statUnits = element.all(by.css('[name=stat\\.units]')).getText() as Promise<string>;
+      Promise.all([statNames, statValues, statUnits])
+        .then(([names, values, units]) => {
+          const stats = [];
+
+          for (let i = 0; i < names.length; i++) {
+            stats.push({
+              name: names[i],
+              value: values[i],
+              units: units[i]
+            })
+          }
+
+          resolve(stats);
+        });
+    });
+  }
+
+  getStatsRemoveButtons() {
+    return element.all(by.css('button[name=stat\\.remove]'));
+  }
+
   setStats(stats: { name: string; value: number; units: string; }[]) {
     const newStatName = element(by.css('input[name=newStat\\.name]'));
     const newStatValue = element(by.css('input[name=newStat\\.value]'));

@@ -87,8 +87,9 @@ export class WriterComponent implements OnInit {
     this.updateSuggestions();
   }
 
-  removeStat(stat){
-    delete this.write.stats[stat.key];
+  removeStat(stat : Stat){
+    var statToRemove = this.write.stats.find(s => s.name == stat.name && s.units == stat.units);
+    this.write.stats.splice(this.write.stats.indexOf(statToRemove), 1);
 
     this.updateSuggestions();
   }
