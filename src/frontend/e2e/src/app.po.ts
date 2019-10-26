@@ -1,6 +1,10 @@
 import { browser, by, element } from 'protractor';
 
 export class AppPage {
+  getValidationErrors(){
+    return element.all(by.css('.alert-danger')).getText() as Promise<string>;
+  }
+
   getStats() {
     return new Promise(resolve => {
       const statNames = element.all(by.css('[name=stat\\.name]')).getText() as Promise<string>;
@@ -96,7 +100,7 @@ export class AppPage {
   }
 
   getSubmitButton(){
-    return element(by.css('button[type=submit]'));
+    return element(by.css('input[type=submit]'));
   }
 
   getToastMessage(){

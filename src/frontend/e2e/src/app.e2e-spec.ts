@@ -52,6 +52,17 @@ describe('App', () => {
     wiremock.stop();
   });
 
+  it('won\'t submit if there\'s no type', () => {
+    page.navigateTo();
+
+    expect(page.getSubmitButton().isEnabled()).toEqual(false);
+
+    page.setType('');
+
+    expect(page.getSubmitButton().isEnabled()).toEqual(false);
+    expect(page.getValidationErrors()).toEqual(['Type required']);
+  })
+
   describe('a fully populated form', () => {
     const type = 'did some rad stuff';
     const tags = ['wore sunglasses', 'kept doing backflips'];
