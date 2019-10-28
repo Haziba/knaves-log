@@ -12,8 +12,6 @@ export class SuggestionsService {
 
   private autoComplete: AutoComplete = new AutoComplete();
 
-  updateSuggestions: BehaviorSubject<AutoComplete> = new BehaviorSubject<AutoComplete>(this.autoComplete);
-
   constructor(
     private http: HttpClient,
     private toastr: ToastrService
@@ -26,7 +24,6 @@ export class SuggestionsService {
           this.eventAutoCompletes = data;
 
           this.autoComplete.types = Object.keys(this.eventAutoCompletes);
-          this.updateSuggestions.next(this.autoComplete);
 
           this.toastr.success('Suggestions loaded!');
 
