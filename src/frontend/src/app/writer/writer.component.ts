@@ -25,7 +25,6 @@ export class WriterComponent implements OnInit {
     ) { }
 
   ngOnInit() {
-    this.suggestionsService.updateSuggestions.subscribe(autoComplete => this.autoComplete = autoComplete);
     this.suggestionsService.load()
       .then(autoComplete => this.autoComplete = autoComplete);
   }
