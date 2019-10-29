@@ -6,9 +6,8 @@ import { WriterStatsComponent } from '../writer-stats/writer-stats.component';
 import { SuggestionsService } from '../suggestions.service';
 import { HttpClientModule } from '@angular/common/http';
 import { ToastrService, ToastrModule } from 'ngx-toastr';
-import { AutoComplete, StatAndUnits } from '../write';
-
-let suggestionsServiceSpy: { load: jasmine.Spy };
+import { AutoComplete } from '../write';
+import { MockComponent } from 'ng-mocks';
 
 describe('WriterComponent', () => {
   let component: WriterComponent;
@@ -29,9 +28,19 @@ describe('WriterComponent', () => {
     }))
 
     TestBed.configureTestingModule({
-      declarations: [ WriterComponent, WriterStatsComponent ],
-      providers: [ { provide: SuggestionsService, useValue: suggestionsServiceSpy }, ToastrService ],
-      imports: [ FormsModule, HttpClientModule, ToastrModule.forRoot() ]
+      declarations: [
+         WriterComponent,
+         MockComponent(WriterStatsComponent)
+      ],
+      providers: [
+        { provide: SuggestionsService, useValue: suggestionsServiceSpy },
+        ToastrService
+      ],
+      imports: [
+        FormsModule,
+        HttpClientModule,
+        ToastrModule.forRoot()
+      ]
     })
     .compileComponents();
   }));

@@ -1,27 +1,18 @@
 import { TestBed, async } from '@angular/core/testing';
+import { MockComponent } from 'ng-mocks';
 import { AppComponent } from './app.component';
 import { WriterComponent } from './writer/writer.component';
-import { FormsModule } from '@angular/forms';
 import { WriterStatsComponent } from './writer-stats/writer-stats.component';
-import { HttpClientModule } from '@angular/common/http';
-import { ToastrService, ToastrModule } from 'ngx-toastr';
 
 describe('AppComponent', () => {
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
         AppComponent,
-        WriterComponent,
-        WriterStatsComponent
+        MockComponent(WriterComponent),
+        MockComponent(WriterStatsComponent)
       ],
-      providers: [
-        ToastrService
-      ],
-      imports: [
-        FormsModule,
-        HttpClientModule,
-        ToastrModule.forRoot()
-      ]
     }).compileComponents();
   }));
 
