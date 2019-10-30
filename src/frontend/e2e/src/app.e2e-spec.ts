@@ -1,5 +1,3 @@
-import { verify, post, urlEqualTo } from 'jswiremock';
-
 import { AppPage } from './app.po';
 import { browser, logging, element, by, protractor } from 'protractor';
 
@@ -148,8 +146,6 @@ describe('App', () => {
     page.setStatUnits('g');
     page.getStatAddButton().click();
 
-    const stats = page.getStats();
-
     expect(page.getStats()).toEqual([{
       name: 'Flax',
       value: '1',
@@ -165,6 +161,8 @@ describe('App', () => {
     expect(page.getStatUnitsSuggestionList()).toEqual([]);
 
     page.getStatsRemoveButtons().first().click();
+
+    page.setStatName('Flax');
 
     expect(page.getStatUnitsSuggestionList()).toEqual(['g']);
   });

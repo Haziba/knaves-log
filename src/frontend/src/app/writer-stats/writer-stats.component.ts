@@ -58,9 +58,6 @@ export class WriterStatsComponent {
       return;
     }
 
-    let usedUnits = this.stats.map(writeStat => writeStat.units);
-
-    this.autoComplete.units = statAndUnits.Units.filter(units => usedUnits.indexOf(units) < 0);
+    this.autoComplete.units = statAndUnits.Units;
   }
-
 }

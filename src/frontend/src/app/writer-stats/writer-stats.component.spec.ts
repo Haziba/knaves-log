@@ -4,6 +4,7 @@ import { WriterStatsComponent } from './writer-stats.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('WriterStatsComponent', () => {
   let component: WriterStatsComponent;
@@ -11,9 +12,18 @@ describe('WriterStatsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ WriterStatsComponent ],
-      providers: [ ToastrService ],
-      imports: [ FormsModule, HttpClientModule, ToastrModule.forRoot() ]
+      declarations: [ 
+        WriterStatsComponent 
+      ],
+      providers: [ 
+        ToastrService 
+      ],
+      imports: [ 
+        FormsModule, 
+        HttpClientModule, 
+        ToastrModule.forRoot(), 
+        BrowserAnimationsModule 
+      ]
     })
     .compileComponents();
   }));

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
-import { Write, AutoComplete, Stat } from './write';
+import { Write, AutoComplete, Stat, StatAndUnits } from './write';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
@@ -41,7 +41,23 @@ export class SuggestionsService {
       return this.autoComplete;
     }
 
-    this.autoComplete.stats = eventAutoComplete.StatsAndUnits;
+    this.autoComplete.stats = eventAutoComplete.StatsAndUnits
+      .map(statAndUnits => {
+        const stats = (write.stats.filter(stat => stat.name == statAndUnits.Stat));
+        let units = statAndUnits.Units;
+
+        if (stats.length > 0){
+          const usedUnits = stats.map(stat => stat.units);
+          units = statAndUnits.Units.filter(units => {
+            return usedUnits.indexOf(units) < 0;
+          })
+        }
+
+        return new StatAndUnits({
+          Stat: statAndUnits.Stat,
+          Units: units
+        });
+      });
 
     this.autoComplete.tags = eventAutoComplete.Tags
       .filter(tag => !write.tags.includes(tag));

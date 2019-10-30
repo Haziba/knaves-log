@@ -5,9 +5,11 @@ export class Write {
     note: string;
     stats: Stat[];
 
-    constructor(){
+    constructor(init?:Partial<Write>){
         this.tags = [];
         this.stats = [];
+
+        Object.assign(this, init);
     }
 }
 
@@ -20,6 +22,12 @@ export class Stat {
 export class StatAndUnits {
     Stat: string;
     Units: string[];
+
+    constructor(init?:Partial<StatAndUnits>){
+        this.Units = [];
+
+        Object.assign(this, init);
+    }
 }
 
 export class AutoComplete {
@@ -27,9 +35,11 @@ export class AutoComplete {
     tags: string[];
     stats: StatAndUnits[];
 
-    constructor(){
+    constructor(init?:Partial<AutoComplete>){
         this.types = [];
         this.tags = [];
         this.stats = [];
+
+        Object.assign(this, init);
     }
 }
