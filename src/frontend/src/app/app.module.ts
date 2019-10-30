@@ -9,12 +9,14 @@ import { AppComponent } from './app.component';
 import { WriterComponent } from './writer/writer.component';
 import { WriterStatsComponent } from './writer-stats/writer-stats.component';
 import { BaseUrlInterceptor } from './interceptors/base-url.interceptor';
+import { WriterTagsComponent } from './writer-tags/writer-tags.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     WriterComponent,
-    WriterStatsComponent
+    WriterStatsComponent,
+    WriterTagsComponent
   ],
   imports: [
     BrowserModule,

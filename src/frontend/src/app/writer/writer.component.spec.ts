@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ToastrService, ToastrModule } from 'ngx-toastr';
 import { AutoComplete } from '../write';
 import { MockComponent } from 'ng-mocks';
+import { WriterTagsComponent } from '../writer-tags/writer-tags.component';
 
 describe('WriterComponent', () => {
   let component: WriterComponent;
@@ -30,7 +31,8 @@ describe('WriterComponent', () => {
     TestBed.configureTestingModule({
       declarations: [
          WriterComponent,
-         MockComponent(WriterStatsComponent)
+         MockComponent(WriterStatsComponent),
+         MockComponent(WriterTagsComponent)
       ],
       providers: [
         { provide: SuggestionsService, useValue: suggestionsServiceSpy },

@@ -62,9 +62,8 @@ export class WriterComponent implements OnInit {
     this.updateSuggestions();
   }
 
-  addTag(){
-    this.write.tags.push(this.newTag);
-    this.newTag = '';
+  addTag(event){
+    this.write.tags.push(event.newTag);
 
     this.updateSuggestions();
   }
